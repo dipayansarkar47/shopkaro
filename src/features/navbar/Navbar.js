@@ -1,12 +1,13 @@
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, ShoppingCartIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Link } from 'react-router-dom'
 
 const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
+  name: 'Dipayan Sarkar',
+  email: 'biki@codewithbiki.com',
   imageUrl:
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    'https://avatars.githubusercontent.com/u/77672753?v=4',
 }
 const navigation = [
   { name: 'Dashboard', href: '#', current: true },
@@ -26,7 +27,7 @@ function Navbar({children}) {
     return ( 
         <>
       <div className="min-h-full">
-        <Disclosure as="nav" className="bg-gray-800">
+        <Disclosure as="nav" className="">
           {({ open }) => (
             <>
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -34,8 +35,8 @@ function Navbar({children}) {
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
                       <img
-                        className="h-8 w-8"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                        className="h-8 "
+                        src="https://shopkaro.today/wp-content/uploads/2022/08/shopkaro-logo.png"
                         alt="Your Company"
                       />
                     </div>
@@ -47,8 +48,8 @@ function Navbar({children}) {
                             href={item.href}
                             className={classNames(
                               item.current
-                                ? 'bg-gray-900 text-white'
-                                : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                ? 'bg-purple-700 text-white'
+                                : 'text-black hover:text-purple-700',
                               'rounded-md px-3 py-2 text-sm font-medium'
                             )}
                             aria-current={item.current ? 'page' : undefined}
@@ -61,14 +62,16 @@ function Navbar({children}) {
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-4 flex items-center md:ml-6">
+                      <Link to="/cart">
                       <button
                         type="button"
-                        className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                      >
+                        className="rounded-full bg-purple-700 p-1 text-white  focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                        >
                         <ShoppingCartIcon className="h-6 w-6" aria-hidden="true" />
                         
                       </button>
-                      <span className="inline-flex items-center rounded-md text-pink-600 mb-5 -ml-3 px-2 py-1 text-xs font-medium ring-1 ring-inset bg-pink-200 ring-pink-700/10">
+                        </Link>
+                      <span className="inline-flex items-center rounded-md text-pink-600 mb-5 -ml-3 px-2 py-1 text-xs font-medium ring-1 ring-inset bg-purple-300 ring-pink-700/10">
         2
       </span>
 
@@ -150,14 +153,17 @@ function Navbar({children}) {
                       <div className="text-base font-medium leading-none text-white">{user.name}</div>
                       <div className="text-sm font-medium leading-none text-gray-400">{user.email}</div>
                     </div>
+                    <Link to="/cart">
+
                     <button
                       type="button"
                       className="ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                    >
+                      >
                       <span className="sr-only">View notifications</span>
                       <ShoppingCartIcon className="h-6 w-6" aria-hidden="true" />
                       
                     </button>
+                      </Link>
                     <span className="inline-flex items-center rounded-md text-pink-600 mb-5 -ml-3 px-2 py-1 text-xs font-medium ring-1 ring-inset bg-pink-200 ring-pink-700/10">
         2
       </span>
@@ -180,11 +186,7 @@ function Navbar({children}) {
           )}
         </Disclosure>
 
-        <header className="bg-white shadow">
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">ShopKaro</h1>
-          </div>
-        </header>
+        
         <main>
           <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">{children}</div>
         </main>
