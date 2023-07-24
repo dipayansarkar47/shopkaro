@@ -1,45 +1,51 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  increment,
-  incrementAsync,
-  selectCount,
+  checkUserAsync, selectError, selectLoggedInUser
 } from '../authSlice';
-import {Link} from 'react-router-dom'
+import {Link, Navigate} from 'react-router-dom'
+import { useForm } from "react-hook-form";
 
 
 export default function Login() {
-  const count = useSelector(selectCount);
   const dispatch = useDispatch();
-
+  const error = useSelector(selectError)
+  const user = useSelector(selectLoggedInUser)
+  const { register, handleSubmit,formState: { errors } } = useForm();
   return (
+    <>
+    {user && <Navigate to='/' replace={true}></Navigate>}
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            className="mx-auto h-10 w-auto"
-            src="https://shopkaro.today/wp-content/uploads/2022/08/shopkaro-logo.png"
+        <img
+            className="mx-auto h-20 w-auto"
+            src="../ShopKaro.png"
             alt="Your Company"
           />
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+          <h2 className="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign in to your account
           </h2>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form noValidate className="space-y-6" onSubmit={handleSubmit((data)=>{
+              dispatch(checkUserAsync({email:data.email, password: data.password}))
+              console.log(data);
+          })}>
             <div>
               <label htmlFor="email" className="block text-sm text-left font-medium leading-6 text-gray-900">
                 Email address
               </label>
               <div className="mt-2">
-                <input
+              <input
                   id="email"
-                  name="email"
+                  {...register("email",{required: "E-mail is Required", pattern: {value: 
+                    // eslint-disable-next-line
+                    /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi, message: 'Email is invalid!'}, })}
                   type="email"
-                  autoComplete="email"
-                  required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                <p className='text-red-500 text-right'>{errors?.email?.message}</p>
               </div>
             </div>
 
@@ -49,21 +55,21 @@ export default function Login() {
                   Password
                 </label>
                 <div className="text-sm">
-                  <a href="#" className="font-semibold text-purple-600 hover:text-purple-500">
+                  <Link to="/forgot-password" className="font-semibold text-purple-600 hover:text-purple-500">
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="mt-2">
-                <input
+              <input
                   id="password"
-                  name="password"
+                  {...register("password",{required: "Password is Required" })}
                   type="password"
-                  autoComplete="current-password"
-                  required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                {errors.password && <p className='text-red-500 text-right'>{errors.password.message}</p>}
               </div>
+              {error && <p className='text-red-500 text-right'>{error.message}</p>}
             </div>
 
             <div>
@@ -84,5 +90,6 @@ export default function Login() {
           </p>
         </div>
       </div>
+    </>
   );
 }
