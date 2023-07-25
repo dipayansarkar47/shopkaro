@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { Fragment } from 'react'
 import { Link, Navigate } from 'react-router-dom'
-import { selectItems,updateCartAsync,deleteItemFromCartAsync } from './cartSlice';
+import { selectItems, updateCartAsync, deleteItemFromCartAsync } from './cartSlice';
 import { discountedPrice } from '../../app/constants';
 
 
@@ -13,23 +13,23 @@ export default function Cart() {
   // eslint-disable-next-line
   const [open, setOpen] = useState(true)
   const items = useSelector(selectItems)
-  const totalAmount = items.reduce((amount,item)=>discountedPrice(item)*item.quantity+amount,0)
-  const totalItems = items.reduce((total,item)=>item.quantity+total,0)
+  const totalAmount = items.reduce((amount, item) => discountedPrice(item) * item.quantity + amount, 0)
+  const totalItems = items.reduce((total, item) => item.quantity + total, 0)
   const handleQuantity = (e, item) => {
     dispatch(updateCartAsync({ ...item, quantity: +e.target.value }));
   };
-  const handleRemove =(e, id)=>{
+  const handleRemove = (e, id) => {
     dispatch(deleteItemFromCartAsync(id))
   }
   return (
     <>
-    {!items.length && <Navigate to='/' replace={true}></Navigate>}
+      {!items.length && <Navigate to='/' replace={true}></Navigate>}
       <div className="mx-auto h-full mt-24 bg-white max-w-7xl px-4 sm:px-6 lg:px-8">
         <h1 className='text-4xl p-5 tracking-tight font-bold'>Your Cart</h1>
         <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
           <div className="flow-root">
             <ul className="-my-6 divide-y divide-gray-200">
-              {items.map((
+              {items?.map((
                 item
               ) => (
                 <li key={item.id} className="flex py-6">
@@ -57,7 +57,7 @@ export default function Cart() {
                           Qty
                         </label>
                         <select
-                        onChange={(e)=>handleQuantity(e,item)} value={item.quantity}
+                          onChange={(e) => handleQuantity(e, item)} value={item.quantity}
                         >
                           <option value="1">1</option>
                           <option value="2">2</option>
@@ -70,7 +70,7 @@ export default function Cart() {
 
                       <div className="flex">
                         <button
-                          onClick={e=>handleRemove(e,item.id)}
+                          onClick={e => handleRemove(e, item.id)}
                           type="button"
                           className="font-medium text-purple-600 hover:text-purple-500"
                         >
@@ -105,15 +105,15 @@ export default function Cart() {
               <Link to="/">
 
 
-              <button
-                type="button"
-                className="font-medium ml-1 mt-5 text-purple-600 hover:text-purple-500"
-                onClick={() => setOpen(false)}
+                <button
+                  type="button"
+                  className="font-medium ml-1 mt-5 text-purple-600 hover:text-purple-500"
+                  onClick={() => setOpen(false)}
                 >
-                Continue Shopping
-                <span aria-hidden="true"> &rarr;</span>
-              </button>
-                </Link>
+                  Continue Shopping
+                  <span aria-hidden="true"> &rarr;</span>
+                </button>
+              </Link>
             </p>
           </div>
         </div>
