@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  checkUserAsync, selectError, selectLoggedInUser
+  loginUserAsync, selectError, selectLoggedInUser
 } from '../authSlice';
-import {Link, Navigate} from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { useForm } from "react-hook-form";
 
 
@@ -11,13 +11,13 @@ export default function Login() {
   const dispatch = useDispatch();
   const error = useSelector(selectError)
   const user = useSelector(selectLoggedInUser)
-  const { register, handleSubmit,formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
   return (
     <>
-    {user && <Navigate to='/' replace={true}></Navigate>}
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      {user && <Navigate to='/' replace={true}></Navigate>}
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img
+          <img
             className="mx-auto h-20 w-auto"
             src="../ShopKaro.png"
             alt="Your Company"
@@ -28,20 +28,24 @@ export default function Login() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form noValidate className="space-y-6" onSubmit={handleSubmit((data)=>{
-              dispatch(checkUserAsync({email:data.email, password: data.password}))
-              console.log(data);
+          <form noValidate className="space-y-6" onSubmit={handleSubmit((data) => {
+            dispatch(loginUserAsync({ email: data.email, password: data.password }))
+            console.log(data);
           })}>
             <div>
               <label htmlFor="email" className="block text-sm text-left font-medium leading-6 text-gray-900">
                 Email address
               </label>
               <div className="mt-2">
-              <input
+                <input
                   id="email"
-                  {...register("email",{required: "E-mail is Required", pattern: {value: 
-                    // eslint-disable-next-line
-                    /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi, message: 'Email is invalid!'}, })}
+                  {...register("email", {
+                    required: "E-mail is Required", pattern: {
+                      value:
+                        // eslint-disable-next-line
+                        /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi, message: 'Email is invalid!'
+                    },
+                  })}
                   type="email"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -61,15 +65,15 @@ export default function Login() {
                 </div>
               </div>
               <div className="mt-2">
-              <input
+                <input
                   id="password"
-                  {...register("password",{required: "Password is Required" })}
+                  {...register("password", { required: "Password is Required" })}
                   type="password"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
                 {errors.password && <p className='text-red-500 text-right'>{errors.password.message}</p>}
               </div>
-              {error && <p className='text-red-500 text-right'>{error.message}</p>}
+              {error && <p className='text-red-500 text-right'>{error || error.message}</p>}
             </div>
 
             <div>

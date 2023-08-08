@@ -101,7 +101,7 @@ function AdminOrders() {
                                     </tr>
                                 </thead>
                                 <tbody className="text-gray-600 text-sm font-light">
-                                    {orders.map(order => <tr className="border-b border-gray-200 hover:bg-gray-100">
+                                    {orders.map(order => <tr key={order.id} className="border-b border-gray-200 hover:bg-gray-100">
                                         <td className="py-3 px-6 text-left whitespace-nowrap">
                                             <div className="flex items-center">
                                                 <div className="mr-2">
@@ -111,20 +111,21 @@ function AdminOrders() {
                                             </div>
                                         </td>
                                         <td className="py-3 px-6 text-left">
-                                            {order.items.map(item => <div className="flex gap-1 items-center">
+                                            {order.items.map((item, index) => 
+                                            (<div key={index} className="flex gap-1 items-center">
                                                 <div className="mr-2">
                                                     <img
                                                         alt="thumbnail"
                                                         className="w-6 h-6 mb-1 rounded-full"
-                                                        src={item.thumbnail}
+                                                        src={item.product.thumbnail}
                                                     />
                                                 </div>
-                                                <span className="font-medium">{item.title} - x{item.quantity} - ${discountedPrice(item)}</span>
-                                            </div>)}
+                                                <span className="font-medium">{item.product.title} - x{item.product.quantity} - ₹{discountedPrice(item.product)}</span>
+                                            </div>))}
                                         </td>
                                         <td className="py-3 px-6 text-center">
                                             <div className="flex flex-col items-center justify-center">
-                                                <p className="font-bold text-purple-500">${order.totalAmount}</p>
+                                                <p className="font-bold text-purple-500">₹{order.totalAmount}</p>
                                             </div>
                                         </td>
                                         {/* <td className="py-3 px-6 text-center">

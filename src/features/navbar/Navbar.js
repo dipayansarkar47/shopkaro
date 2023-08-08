@@ -4,6 +4,7 @@ import { Bars3Icon, ShoppingCartIcon, XMarkIcon } from '@heroicons/react/24/outl
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectItems } from '../cart/cartSlice'
+// import { selectUserInfo } from '../user/userSlice'
 
 const user = {
   name: 'Dipayan Sarkar',
@@ -13,9 +14,9 @@ const user = {
 
 const userNavigation = [
   { name: 'My Profile', link: '/profile',user:true },
-  { name: 'My Orders', link: '/orders',user:true },
+  { name: 'My Orders', link: '/my-orders',user:true },
   { name: 'Sign out', link: '/logout',user:true },
-  { name: 'Admin Login', link: '/admin',admin:true },
+  // { name: 'Admin Login', link: '/admin',admin:true },
 ]
 
 function classNames(...classes) {
@@ -24,6 +25,7 @@ function classNames(...classes) {
 
 function Navbar({ children }) {
   const items = useSelector(selectItems)
+  // const userInfo = useSelector(selectUserInfo)
   return (
     <>
       <div className="min-h-full">
@@ -37,12 +39,13 @@ function Navbar({ children }) {
                       <Link to="/">
 
                         <img
-                          className="h-20"
+                          className="h-28 mt-4 "
                           src="../ShopKaro.png"
                           alt="ShopKaro"
                         />
                       </Link>
                     </div>
+                    
                     
                   </div>
                   <div className="hidden md:block">

@@ -2,16 +2,16 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { fetchLoggedInUserOrders, updateUser, fetchLoggedInUser } from './userAPI';
 
 const initialState = {
-  userOrders: [],
   status: 'idle',
-  userInfo: 0, // this info will be used in case of detailed user info, while auth will 
-  // only be used for loggedInUser id etc checks
+  userInfo: 0,
+  userLoaded: false,
+  userOrderLoaded: false
 };
 
 export const fetchLoggedInUserOrderAsync = createAsyncThunk(
   'user/fetchLoggedInUserOrders',
-  async (id) => {
-    const response = await fetchLoggedInUserOrders(id);
+  async () => {
+    const response = await fetchLoggedInUserOrders();
     // The value we return becomes the `fulfilled` action payload
     return response.data;
   }
@@ -20,8 +20,8 @@ export const fetchLoggedInUserOrderAsync = createAsyncThunk(
 
 export const fetchLoggedInUserAsync = createAsyncThunk(
   'user/fetchLoggedInUser',
-  async (id) => {
-    const response = await fetchLoggedInUser(id);
+  async () => {
+    const response = await fetchLoggedInUser();
     // The value we return becomes the `fulfilled` action payload
     return response.data;
   }
@@ -29,8 +29,8 @@ export const fetchLoggedInUserAsync = createAsyncThunk(
 
 export const updateUserAsync = createAsyncThunk(
   'user/updateUser',
-  async (id) => {
-    const response = await updateUser(id);
+  async (update) => {
+    const response = await updateUser(update);
     // The value we return becomes the `fulfilled` action payload
     return response.data;
   }
@@ -46,33 +46,44 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchLoggedInUserOrderAsync.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(fetchLoggedInUserOrderAsync.fulfilled, (state, action) => {
-        state.status = 'idle';
-        state.userOrders = action.payload;
-      })
+    .addCase(fetchLoggedInUserOrderAsync.pending, (state) => {
+      state.status = 'loading';
+    })
+    .addCase(fetchLoggedInUserOrderAsync.fulfilled, (state, action) => {
+      state.status = 'idle';
+      state.userInfo.orders = action.payload;
+      state.userOrderLoaded = true;
+    })
+    .addCase(fetchLoggedInUserOrderAsync.rejected, (state, action) => {
+      state.status = 'idle';
+      state.userOrderLoaded = true;
+    })
       .addCase(updateUserAsync.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(updateUserAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.userOrders = action.payload;
+        state.userInfo = action.payload;
       })
       .addCase(fetchLoggedInUserAsync.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(fetchLoggedInUserAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-        // this info can be different or more from logged-in User info
         state.userInfo = action.payload;
-      });
+        state.userLoaded = true;
+      })
+      .addCase(fetchLoggedInUserAsync.rejected, (state, action) => {
+        state.status = 'idle';
+        state.userLoaded = true;
+      })
   },
 });
 
-export const selectUserOrders = (state)=>state.user.userOrders;
+export const selectUserOrders = (state)=>state.user.userInfo.orders;
 export const selectUserInfo = (state)=>state.user.userInfo;
+export const selectUserLoaded = (state)=>state.user.userLoaded;
+export const selectUserOrderLoaded = (state)=>state.user.userOrderLoaded;
 
 export const { increment } = userSlice.actions;
 

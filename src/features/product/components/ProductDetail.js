@@ -1,38 +1,37 @@
-import { useEffect, useState } from 'react'
+import { useEffect} from 'react'
 import { StarIcon } from '@heroicons/react/20/solid'
-import { RadioGroup } from '@headlessui/react'
+// import { RadioGroup } from '@headlessui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   fetchProductByIdAsync,
   selectProductById,
 } from '../productSlice';
-import { Link, useParams } from 'react-router-dom';
-import { selectLoggedInUser } from '../../auth/authSlice';
+import { useParams } from 'react-router-dom';
 import { addToCartAsync, selectItems } from '../../cart/cartSlice';
 import { discountedPrice } from '../../../app/constants';
 
 
-const colors = [
-    { name: 'White', class: 'bg-white', selectedClass: 'ring-gray-400' },
-    { name: 'Gray', class: 'bg-gray-200', selectedClass: 'ring-gray-400' },
-    { name: 'Black', class: 'bg-gray-900', selectedClass: 'ring-gray-900' },
-]
-const sizes = [
-    { name: 'XXS', inStock: false },
-    { name: 'XS', inStock: true },
-    { name: 'S', inStock: true },
-    { name: 'M', inStock: true },
-    { name: 'L', inStock: true },
-    { name: 'XL', inStock: true },
-    { name: '2XL', inStock: true },
-    { name: '3XL', inStock: true },
-]
-const highlights = [
-  'Hand cut and sewn locally',
-  'Dyed with our proprietary colors',
-  'Pre-washed & pre-shrunk',
-  'Ultra-soft 100% cotton',
-]
+// const colors = [
+//     { name: 'White', class: 'bg-white', selectedClass: 'ring-gray-400' },
+//     { name: 'Gray', class: 'bg-gray-200', selectedClass: 'ring-gray-400' },
+//     { name: 'Black', class: 'bg-gray-900', selectedClass: 'ring-gray-900' },
+// ]
+// const sizes = [
+//     { name: 'XXS', inStock: false },
+//     { name: 'XS', inStock: true },
+//     { name: 'S', inStock: true },
+//     { name: 'M', inStock: true },
+//     { name: 'L', inStock: true },
+//     { name: 'XL', inStock: true },
+//     { name: '2XL', inStock: true },
+//     { name: '3XL', inStock: true },
+// ]
+// const highlights = [
+//   'Hand cut and sewn locally',
+//   'Dyed with our proprietary colors',
+//   'Pre-washed & pre-shrunk',
+//   'Ultra-soft 100% cotton',
+// ]
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -41,9 +40,8 @@ function classNames(...classes) {
 
 
 export default function ProductDetail() {
-  const [selectedColor, setSelectedColor] = useState(colors[0])
-  const [selectedSize, setSelectedSize] = useState(sizes[2])
-  const user = useSelector(selectLoggedInUser)
+  // const [selectedColor, setSelectedColor] = useState(colors[0])
+  // const [selectedSize, setSelectedSize] = useState(sizes[2])
   const items = useSelector(selectItems)
   const product = useSelector(selectProductById)
   const dispatch = useDispatch()
@@ -51,9 +49,8 @@ export default function ProductDetail() {
 
   const handleCart = (e) => {
     e.preventDefault()
-    if(items.findIndex(item=>item.productId===product.id)<0){
-      const newItem = {...product,productId:product.id,quantity:1,user:user.id}
-      delete newItem['id']
+    if(items.findIndex(item=>item.product.id===product.id)<0){
+      const newItem = {product:product.id,quantity:1}
       dispatch(addToCartAsync(newItem))
     }else{
       console.log("Already added")
@@ -140,14 +137,15 @@ export default function ProductDetail() {
           {/* Options */}
           <div className="mt-4 lg:row-span-3 lg:mt-0">
             <h2 className="sr-only">Product information</h2>
-            <p className="text-xl line-through tracking-tight text-purple-800 text-left">${product.price}</p>
-            <p className="text-3xl tracking-tight text-purple-800 text-left">${discountedPrice(product)}</p>
+            <p className="text-xl line-through tracking-tight text-purple-800 text-left">₹{product.price}</p>
+            <p className="text-3xl tracking-tight text-purple-800 text-left">₹{discountedPrice(product)}</p>
 
             {/* Reviews */}
             <div className="mt-6">
               <h3 className="sr-only">Reviews</h3>
               <div className="flex items-center">
                 <div className="flex items-center">
+                  Rating: 
                   {[0, 1, 2, 3, 4].map((rating) => (
                     <StarIcon
                       key={rating}
@@ -166,7 +164,7 @@ export default function ProductDetail() {
 
             <form className="mt-10">
               {/* Colors */}
-              <div>
+              {/* <div>
                 <h3 className="text-sm font-medium text-gray-900">Color</h3>
 
                 <RadioGroup value={selectedColor} onChange={setSelectedColor} className="mt-4">
@@ -202,7 +200,7 @@ export default function ProductDetail() {
               </div>
 
               {/* Sizes */}
-              <div className="mt-10">
+              {/* <div className="mt-10">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-medium text-gray-900">Size</h3>
                   <Link to="/" className="text-sm font-medium text-purple-600 hover:text-purple-500">
@@ -261,7 +259,7 @@ export default function ProductDetail() {
                     ))}
                   </div>
                 </RadioGroup>
-              </div>
+              </div> */}
 
               <button
               onClick={handleCart}
@@ -275,15 +273,15 @@ export default function ProductDetail() {
 
           <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
             {/* Description and details */}
-            <div>
+            {/* <div>
               <h3 className="sr-only text-left">Description</h3>
 
               <div className="space-y-6 text-left">
                 <p className="text-base text-gray-900">{product.description}</p>
               </div>
-            </div>
+            </div> */}
 
-            <div className="mt-10">
+            {/* <div className="mt-10">
               <h3 className="text-sm font-medium text-gray-900 text-left">Highlights</h3>
 
               <div className="mt-4">
@@ -295,7 +293,7 @@ export default function ProductDetail() {
                   ))}
                 </ul>
               </div>
-            </div>
+            </div> */}
 
             <div className="mt-10">
               <h2 className="text-sm font-medium text-gray-900 text-left">Details</h2>

@@ -7,7 +7,6 @@ import {
   selectProductById,
 } from '../../product/productSlice';
 import { Link, useParams } from 'react-router-dom';
-import { selectLoggedInUser } from '../../auth/authSlice';
 import { addToCartAsync } from '../../cart/cartSlice';
 import { discountedPrice } from '../../../app/constants';
 
@@ -43,14 +42,13 @@ function classNames(...classes) {
 export default function AdminProductDetail() {
   const [selectedColor, setSelectedColor] = useState(colors[0])
   const [selectedSize, setSelectedSize] = useState(sizes[2])
-  const user = useSelector(selectLoggedInUser)
   const product = useSelector(selectProductById)
   const dispatch = useDispatch()
   const params = useParams()
 
   const handleCart = (e) => {
     e.preventDefault()
-    const newItem = {...product,quantity:1,user:user.id}
+    const newItem = {...product,quantity:1}
     delete newItem['id']
     dispatch(addToCartAsync(newItem))
   }
@@ -134,8 +132,8 @@ export default function AdminProductDetail() {
           {/* Options */}
           <div className="mt-4 lg:row-span-3 lg:mt-0">
             <h2 className="sr-only">Product information</h2>
-            <p className="text-xl line-through tracking-tight text-purple-800 text-left">${product.price}</p>
-            <p className="text-3xl tracking-tight text-purple-800 text-left">${discountedPrice(product)}</p>
+            <p className="text-xl line-through tracking-tight text-purple-800 text-left">₹{product.price}</p>
+            <p className="text-3xl tracking-tight text-purple-800 text-left">₹{discountedPrice(product)}</p>
 
             {/* Reviews */}
             <div className="mt-6">

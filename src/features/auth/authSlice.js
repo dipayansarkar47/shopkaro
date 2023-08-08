@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { createUser, signOut, updateUser } from './authAPI';
-import { checkUser } from './authAPI';
+import { checkAuth, createUser, loginUser, signOut } from './authAPI';
 
 const initialState = {
-  loggedInUser: null,
+  loggedInUserToken: null,
   status: 'idle',
-  error: null
+  error: null,
+  userChecked: false
 };
 
 export const createUserAsync = createAsyncThunk(
@@ -16,22 +16,32 @@ export const createUserAsync = createAsyncThunk(
     return response.data;
   }
 );
-export const updateUserAsync = createAsyncThunk(
-  'user/updateUser',
-  async (update) => {
-    const response = await updateUser(update);
-    // The value we return becomes the `fulfilled` action payload
-    return response.data;
+
+export const loginUserAsync = createAsyncThunk(
+  'user/loginUser',
+  async (loginInfo, { rejectWithValue }) => {
+    try {
+
+      const response = await loginUser(loginInfo);
+      return response.data;
+    } catch (error) {
+      console.log(error)
+      return rejectWithValue(error)
+    }
   }
 );
-export const checkUserAsync = createAsyncThunk(
-  'user/checkUser',
-  async (loginInfo) => {
-    const response = await checkUser(loginInfo);
-    // The value we return becomes the `fulfilled` action payload
-    return response.data;
+export const checkAuthAsync = createAsyncThunk(
+  'user/checkAuth',
+  async () => {
+    try {
+      const response = await checkAuth();
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
+
 export const signOutAsync = createAsyncThunk(
   'user/signOut',
   async (loginInfo) => {
@@ -56,40 +66,47 @@ export const authSlice = createSlice({
       })
       .addCase(createUserAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.loggedInUser += action.payload;
+        state.loggedInUserToken += action.payload;
       })
-      .addCase(checkUserAsync.pending, (state) => {
+      .addCase(loginUserAsync.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(checkUserAsync.fulfilled, (state, action) => {
+      .addCase(loginUserAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.loggedInUser = action.payload;
+        state.loggedInUserToken = action.payload;
       })
-      .addCase(checkUserAsync.rejected, (state, action) => {
+      .addCase(loginUserAsync.rejected, (state, action) => {
         state.status = 'idle';
-        state.error = action.error;
-      })
-      .addCase(updateUserAsync.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(updateUserAsync.fulfilled, (state, action) => {
-        state.status = 'idle';
-        state.loggedInUser = action.payload;
+        state.error = action.payload;
       })
       .addCase(signOutAsync.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(signOutAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.loggedInUser = null;
+        state.loggedInUserToken = null;
+      })
+      .addCase(checkAuthAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(checkAuthAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.loggedInUserToken = action.payload;
+        state.userChecked = true;
+      })
+      .addCase(checkAuthAsync.rejected, (state, action) => {
+        state.status = 'idle';
+        state.userChecked = true;
       });
   },
 });
 
 
-export const selectLoggedInUser = (state)=>state.auth.loggedInUser;
-export const selectError = (state)=>state.auth.error;
-export const { increment} = authSlice.actions;
+export const selectLoggedInUser = (state) => state.auth.loggedInUserToken;
+export const selectError = (state) => state.auth.error;
+export const selectUserChecked = (state) => state.auth.userChecked;
+
+export const { increment } = authSlice.actions;
 
 
 

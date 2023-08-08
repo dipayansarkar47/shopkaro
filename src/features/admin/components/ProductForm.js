@@ -126,7 +126,7 @@ function ProductForm() {
                       required: 'Brand is required',
                     })}>
                 <option value="">--choose brand--</option>
-                  {brands.map(brand=><option value={brand.value}>{brand.label}</option>)}
+                  {brands.map(brand=><option key={brand.value}  value={brand.value}>{brand.label}</option>)}
                </select>
               </div>
             </div>
@@ -140,7 +140,7 @@ function ProductForm() {
                       required: 'Category is required',
                     })}>
                 <option value="">--choose category--</option>
-                  {categories.map(category=><option value={category.value}>{category.label}</option>)}
+                  {categories.map(category=><option key={category.value} value={category.value}>{category.label}</option>)}
                </select>
               </div>
             </div>
@@ -369,7 +369,7 @@ function ProductForm() {
           Cancel
         </Link>
 
-       {selectedProduct && <button
+       {selectedProduct && selectedProduct.deleted && <button
           onClick={handleDelete}
           className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >

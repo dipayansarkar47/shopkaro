@@ -16,7 +16,7 @@ import {
 import Protected from './features/auth/components/Protected';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchItemsByUserIdAsync } from './features/cart/cartSlice';
-import { selectLoggedInUser } from './features/auth/authSlice';
+import { checkAuthAsync, selectLoggedInUser, selectUserChecked } from './features/auth/authSlice';
 import PageNotFound from './pages/404';
 import OrderSuccessPage from './pages/OrderSuccessPage';
 import UserOrdersPage from './pages/UserOrdersPage';
@@ -29,6 +29,14 @@ import AdminHome from './pages/AdminHome';
 import AdminProductDetailPage from './pages/AdminProductDetailPage';
 import AdminProductFormPage from './pages/AdminProductFormPage';
 import AdminOrdersPage from './pages/AdminOrdersPage';
+import StripeCheckout from './pages/StripeCheckout';
+
+
+// const options = {
+//   timeout: 5000,
+//   position: positions.BOTTOM_LEFT,
+// };
+
 
 const router = createBrowserRouter([
   {
@@ -48,11 +56,11 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "login",
+    path: "/login",
     element: <LoginPage></LoginPage>
   },
   {
-    path: "signup",
+    path: "/signup",
     element: <SignupPage></SignupPage>
   },
   {
@@ -107,7 +115,7 @@ const router = createBrowserRouter([
     </ProtectedAdmin>
   },
   {
-    path: "/orders",
+    path: "/my-orders",
     element: <Protected>
       <UserOrdersPage></UserOrdersPage>
     </Protected>
@@ -120,6 +128,14 @@ const router = createBrowserRouter([
     </Protected>
   },
   {
+    path: '/stripe-checkout/',
+    element: (
+      <Protected>
+        <StripeCheckout></StripeCheckout>
+      </Protected>
+    ),
+  },
+  {
     path: "/order-success/:id",
     element: <OrderSuccessPage></OrderSuccessPage>
   },
@@ -130,19 +146,26 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const user = useSelector(selectLoggedInUser)
   const dispatch = useDispatch();
+  const user = useSelector(selectLoggedInUser)
+  const userChecked = useSelector(selectUserChecked);
+
+
+  useEffect(()=>{
+    dispatch(checkAuthAsync())
+  }, [dispatch]);
+
   useEffect(() => {
     if (user) {
-      dispatch(fetchItemsByUserIdAsync(user.id))
-      dispatch(fetchLoggedInUserAsync(user.id))
+      dispatch(fetchItemsByUserIdAsync())
+      dispatch(fetchLoggedInUserAsync())
     }
   }, [dispatch, user])
 
   return (
     <>
       <div className="App">
-        <RouterProvider router={router} />
+        {userChecked &&  <RouterProvider router={router} />}
       </div>
     </>
   );

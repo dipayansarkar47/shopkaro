@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   createUserAsync,
@@ -12,12 +12,9 @@ export default function Signup() {
   const user = useSelector(selectLoggedInUser)
   const { register, handleSubmit,formState: { errors } } = useForm();
 
-  const [isReloaded, setIsReloaded] = useState(false);
 
-  const handleClick = () => {
-    window.location.reload(true);
-    setIsReloaded(true);
-  };
+
+  
   console.log(errors)
   return (
     <>
@@ -98,15 +95,14 @@ export default function Signup() {
               <button
                 type="submit"
                 onClick={
-                  // Navigate("/login")
-                  handleClick
+                  Navigate("/login")
+
                   
                 }
                 className="flex w-full justify-center rounded-md bg-purple-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-purple-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                 Sign Up
               </button>
-              {isReloaded && <Navigate to='/login' replace={true}></Navigate>}
             </div>
           </form>
 

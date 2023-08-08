@@ -1,13 +1,13 @@
 // A mock function to mimic making an async request for data
 export function createUser(userData) {
-  return new Promise(async (resolve) =>{
-    const response = await fetch('http://localhost:8000/users',{
+  return new Promise(async (resolve) => {
+    const response = await fetch('/auth/signup', {
       method: 'POST',
       body: JSON.stringify(userData),
-      headers: {'content-type':'application/json'}
+      headers: { 'content-type': 'application/json' }
     })
     const data = await response.json()
-    resolve({data})
+    resolve({ data })
   }
   );
 }
@@ -17,35 +17,56 @@ export function signOut(userId) {
     resolve({ data: 'success' });
   });
 }
-export function checkUser(loginInfo) {
-  return new Promise(async (resolve,reject) =>{
-    const email = loginInfo.email
-    const password = loginInfo.password
-    const response = await fetch('http://localhost:8000/users?email='+email)
-    const data = await response.json()
-    console.log({data})
-    if(data.length){
-      if(password===data[0].password){
-        resolve({data:data[0]})
-      }else{
-        reject({message:'User not found :('})
+export function loginUser(loginInfo) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await fetch('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(loginInfo),
+        headers: { 'content-type': 'application/json' },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        resolve({ data });
+      } else {
+        const error = await response.text();
+        reject(error);
       }
-    }else{
-      reject({message:'User not found :('})
+    } catch (error) {
+      reject(error);
     }
-  }
-  );
+
+    // TODO: on server it will only return some info of user (not password)
+  });
+}
+export function checkAuth() {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await fetch('/auth/check');
+      if (response.ok) {
+        const data = await response.json();
+        resolve({ data });
+      } else {
+        const error = await response.text();
+        reject(error);
+      }
+    } catch (error) {
+      reject(error);
+    }
+
+    // TODO: on server it will only return some info of user (not password)
+  });
 }
 
 export function updateUser(update) {
-  return new Promise(async (resolve) =>{
-    const response = await fetch('http://localhost:8000/users/'+update.id,{
+  return new Promise(async (resolve) => {
+    const response = await fetch('/users/' + update.id, {
       method: 'PATCH',
       body: JSON.stringify(update),
-      headers: {'content-type':'application/json'}
+      headers: { 'content-type': 'application/json' }
     })
     const data = await response.json()
-    resolve({data})
+    resolve({ data })
   }
   );
 }

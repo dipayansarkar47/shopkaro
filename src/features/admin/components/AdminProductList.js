@@ -95,7 +95,7 @@ export default function AdminProductList() {
 
   useEffect(() => {
     const pagination = { _page: page, _limit: ITEMS_PER_PAGE };
-    dispatch(fetchProductsByFiltersAsync({ filter, sort, pagination }));
+    dispatch(fetchProductsByFiltersAsync({ filter, sort, pagination, admin:true }));
   }, [dispatch, filter, sort, page]);
 
   useEffect(() => {
@@ -439,6 +439,7 @@ function Pagination({ page, setPage, handlePage, totalItems }) {
             {Array.from({ length: totalPages }).map(
               (el, index) => (
                 <div
+                key={index}
                   onClick={e => handlePage(index + 1)}
                   aria-current="page"
                   className={`relative cursor-pointer z-10 inline-flex items-center ${index + 1 === page ? ' bg-indigo-600 text-white' : 'text-gray-400'} px-4 py-2 text-sm font-semibold  focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
@@ -450,6 +451,7 @@ function Pagination({ page, setPage, handlePage, totalItems }) {
 
 
             <div
+              
               onClick={e => handlePage(page<totalPages ? page + 1:page)}
               className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
             >
@@ -491,8 +493,8 @@ function ProductGrid({ products }) {
                   </div>
                   <div>
 
-                    <p className="text-sm block font-bold text-purple-700 p-2 ">${Math.round(product.price * (1 - product.discountPercentage / 100))}</p>
-                    <p className="text-xs block line-through font-medium text-gray-500 ">${product.price}</p>
+                    <p className="text-sm block font-bold text-purple-700 p-2 ">₹{Math.round(product.price * (1 - product.discountPercentage / 100))}</p>
+                    <p className="text-xs block line-through font-medium text-gray-500 ">₹{product.price}</p>
                   </div>
                   
                 </div>

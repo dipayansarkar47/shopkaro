@@ -434,10 +434,10 @@ function ProductGrid({ products }) {
                   </div>
                   <div>
                     <p className="text-sm block font-bold text-purple-600 p-2 ">
-                      ${discountedPrice(product)}
+                      ₹{discountedPrice(product)}
                     </p>
                     <p className="text-xs block line-through font-medium text-gray-500 ">
-                      ${product.price}
+                      ₹{product.price}
                     </p>
                   </div>
                 </div>
